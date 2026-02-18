@@ -1,11 +1,12 @@
 FROM node:20-alpine AS base
 
 FROM base AS deps
-RUN apk add --no-cache libc6-compat python3 make g++
+RUN apk add --no-cache libc6-compat python3 make g++ vips-dev
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable pnpm && pnpm config set ignore-scripts false && pnpm i
+RUN corepack enable pnpm && pnpm i
+RUN npm rebuild sharp
 
 FROM base AS builder
 WORKDIR /app
@@ -38,4 +39,4 @@ USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 
-CMD HOSTNAME="0.0.0.0" node server.js
+CMD ["node", "server.js"]
