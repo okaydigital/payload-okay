@@ -9,6 +9,7 @@ RUN corepack enable pnpm && pnpm i
 RUN npm rebuild sharp
 
 FROM base AS builder
+RUN apk add --no-cache vips-cpp
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
